@@ -472,6 +472,15 @@
             font-size: 36px;
             border: 3px solid #dbdbdb;
             transition: all 0.3s;
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+        }
+
+        .highlight-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .highlight:hover .highlight-icon {
@@ -481,6 +490,132 @@
         .highlight-label {
             font-size: 12px;
             color: #262626;
+        }
+
+        /* Highlight Popup Modal */
+        .highlight-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .highlight-popup.show {
+            display: flex;
+        }
+
+        .popup-content {
+            position: relative;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .popup-header {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #dbdbdb;
+            gap: 12px;
+        }
+
+        .popup-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: #f0f0f0;
+            border: 2px solid #667eea;
+            overflow: hidden;
+        }
+
+        .popup-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .popup-username {
+            font-weight: 600;
+            font-size: 16px;
+            color: #262626;
+        }
+
+        .popup-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #8e8e8e;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .popup-close:hover {
+            background: #f0f0f0;
+            color: #262626;
+        }
+
+        .popup-image {
+            width: 100%;
+            max-height: 600px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 100px;
+            min-height: 400px;
+        }
+
+        .popup-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .popup-timer {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
         }
 
         .tabs {
@@ -649,6 +784,20 @@
         </div>
 
         <div class="image-upload">
+            <label>Friends Highlight</label>
+            <input type="file" id="friendsInput" class="file-input" accept="image/*">
+            <button class="upload-btn" onclick="document.getElementById('friendsInput').click()">Choose Friends Image</button>
+            <img id="friendsPreview" class="preview-thumb" style="display: none;">
+        </div>
+
+        <div class="image-upload">
+            <label>Extra Highlight</label>
+            <input type="file" id="extraInput" class="file-input" accept="image/*">
+            <button class="upload-btn" onclick="document.getElementById('extraInput').click()">Choose Extra Image</button>
+            <img id="extraPreview" class="preview-thumb" style="display: none;">
+        </div>
+
+        <div class="image-upload">
             <label>Post 1</label>
             <input type="file" id="post0Input" class="file-input" accept="image/*">
             <button class="upload-btn" onclick="document.getElementById('post0Input').click()">Choose Image</button>
@@ -756,26 +905,14 @@
                 </div>
             </div>
 
-            <div class="highlights">
-                <div class="highlight">
-                    <div class="highlight-icon">📸</div>
-                    <div class="highlight-label">Travel</div>
+            <div class="highlights" id="highlights">
+                <div class="highlight" onclick="showHighlightPopup('friends')">
+                    <div class="highlight-icon" id="friendsIcon">👥</div>
+                    <div class="highlight-label">friends</div>
                 </div>
-                <div class="highlight">
-                    <div class="highlight-icon">🎨</div>
-                    <div class="highlight-label">Art</div>
-                </div>
-                <div class="highlight">
-                    <div class="highlight-icon">🍕</div>
-                    <div class="highlight-label">Food</div>
-                </div>
-                <div class="highlight">
-                    <div class="highlight-icon">🎵</div>
-                    <div class="highlight-label">Music</div>
-                </div>
-                <div class="highlight">
-                    <div class="highlight-icon">💼</div>
-                    <div class="highlight-label">Work</div>
+                <div class="highlight" onclick="showHighlightPopup('extra')">
+                    <div class="highlight-icon" id="extraIcon">✨</div>
+                    <div class="highlight-label">extra</div>
                 </div>
             </div>
 
@@ -786,6 +923,19 @@
             </div>
 
             <div class="posts" id="posts"></div>
+        </div>
+    </div>
+
+    <!-- Highlight Popup Modal -->
+    <div class="highlight-popup" id="highlightPopup">
+        <div class="popup-content">
+            <div class="popup-header">
+                <div class="popup-avatar" id="popupAvatar">👥</div>
+                <div class="popup-username" id="popupUsername">friends</div>
+                <button class="popup-close" onclick="closeHighlightPopup()">×</button>
+            </div>
+            <div class="popup-image" id="popupImage">👥</div>
+            <div class="popup-timer" id="popupTimer">30s</div>
         </div>
     </div>
 
@@ -813,7 +963,9 @@
             logo: null,
             avatar: null,
             cover: null,
-            posts: [null, null, null, null, null, null]
+            posts: [null, null, null, null, null, null],
+            friends: null,
+            extra: null
         };
 
         const gradients = [
@@ -858,6 +1010,16 @@
             updateCover();
         });
 
+        setupImageUpload('friendsInput', (data) => {
+            userImages.friends = data;
+            updateHighlights();
+        });
+
+        setupImageUpload('extraInput', (data) => {
+            userImages.extra = data;
+            updateHighlights();
+        });
+
         for (let i = 0; i < 6; i++) {
             setupImageUpload(`post${i}Input`, (data) => {
                 userImages.posts[i] = data;
@@ -885,6 +1047,99 @@
                 coverEl.style.backgroundImage = `url(${userImages.cover})`;
             }
         }
+
+        function updateHighlights() {
+            const friendsIcon = document.getElementById('friendsIcon');
+            const extraIcon = document.getElementById('extraIcon');
+            
+            if (userImages.friends) {
+                friendsIcon.innerHTML = `<img src="${userImages.friends}" alt="friends">`;
+            }
+            
+            if (userImages.extra) {
+                extraIcon.innerHTML = `<img src="${userImages.extra}" alt="extra">`;
+            }
+        }
+
+        let popupTimer = null;
+        let countdown = null;
+
+        function showHighlightPopup(type) {
+            const popup = document.getElementById('highlightPopup');
+            const popupAvatar = document.getElementById('popupAvatar');
+            const popupUsername = document.getElementById('popupUsername');
+            const popupImage = document.getElementById('popupImage');
+            const timerEl = document.getElementById('popupTimer');
+            
+            // Set content based on type
+            popupUsername.textContent = type;
+            
+            if (type === 'friends') {
+                if (userImages.friends) {
+                    popupAvatar.innerHTML = `<img src="${userImages.friends}" alt="friends">`;
+                    popupImage.innerHTML = `<img src="${userImages.friends}" alt="friends">`;
+                } else {
+                    popupAvatar.innerHTML = '👥';
+                    popupImage.innerHTML = '👥';
+                    popupImage.style.fontSize = '100px';
+                }
+            } else if (type === 'extra') {
+                if (userImages.extra) {
+                    popupAvatar.innerHTML = `<img src="${userImages.extra}" alt="extra">`;
+                    popupImage.innerHTML = `<img src="${userImages.extra}" alt="extra">`;
+                } else {
+                    popupAvatar.innerHTML = '✨';
+                    popupImage.innerHTML = '✨';
+                    popupImage.style.fontSize = '100px';
+                }
+            }
+            
+            // Show popup
+            popup.classList.add('show');
+            
+            // Clear any existing timers
+            if (popupTimer) clearTimeout(popupTimer);
+            if (countdown) clearInterval(countdown);
+            
+            // Start countdown
+            let timeLeft = 30;
+            timerEl.textContent = `${timeLeft}s`;
+            
+            countdown = setInterval(() => {
+                timeLeft--;
+                timerEl.textContent = `${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    closeHighlightPopup();
+                }
+            }, 1000);
+            
+            // Auto-close after 30 seconds
+            popupTimer = setTimeout(() => {
+                closeHighlightPopup();
+            }, 30000);
+        }
+
+        function closeHighlightPopup() {
+            const popup = document.getElementById('highlightPopup');
+            popup.classList.remove('show');
+            
+            if (popupTimer) {
+                clearTimeout(popupTimer);
+                popupTimer = null;
+            }
+            if (countdown) {
+                clearInterval(countdown);
+                countdown = null;
+            }
+        }
+
+        // Close popup when clicking outside
+        document.getElementById('highlightPopup').addEventListener('click', (e) => {
+            if (e.target.id === 'highlightPopup') {
+                closeHighlightPopup();
+            }
+        });
 
         function renderPosts() {
             const postsContainer = document.getElementById('posts');
@@ -965,14 +1220,22 @@ if (typeof loadImagesFromConfig === 'function') {
                 userImages.cover = config.cover;
                 updateCover();
             }
+            if (config.friends) {
+                userImages.friends = config.friends;
+            }
+            if (config.extra) {
+                userImages.extra = config.extra;
+            }
             if (config.posts) {
                 userImages.posts = config.posts;
             }
+            updateHighlights();
             renderPosts();
         }
 
         // Initial render
         renderPosts();
+        updateHighlights();
 
         // Try to load saved config
         if (typeof IMAGES_CONFIG_PROFILE !== 'undefined') {
