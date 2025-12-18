@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parallelogram_Best_Shape - Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 935px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar {
+            background: white;
+            border-bottom: 1px solid #dbdbdb;
+            padding: 12px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #262626;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .nav-link:hover {
+            transform: scale(1.1);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cover {
+            height: 280px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .profile-container {
+            padding: 0 40px 40px;
+            margin-top: -80px;
+            position: relative;
+        }
+
+        .profile-top {
+            display: flex;
+            gap: 80px;
+            margin-bottom: 30px;
+        }
+
+        .avatar {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 6px solid white;
+            background: #e1e8ed;
+            flex-shrink: 0;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+
+        .profile-details {
+            flex: 1;
+            padding-top: 100px;
+        }
+
+        .username-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .username {
+            font-size: 28px;
+            font-weight: 300;
+            color: #262626;
+        }
+
+        .verified {
+            color: #667eea;
+            font-size: 22px;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #2d3748;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+        }
+
+        .stats {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #262626;
+        }
+
+        .stat strong {
+            font-weight: 600;
+        }
+
+        .bio-section {
+            color: #262626;
+        }
+
+        .name {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .bio-text {
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .highlights {
+            display: flex;
+            gap: 30px;
+            padding: 25px 40px;
+            border-top: 1px solid #dbdbdb;
+            border-bottom: 1px solid #dbdbdb;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .highlight-icon {
+            width: 77px;
+            height: 77px;
+            border-radius: 50%;
+            border: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            background: white;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+
+        .highlight:hover .highlight-icon {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .highlight-label {
+            font-size: 12px;
+            color: #262626;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            border-bottom: 1px solid #dbdbdb;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #8e8e8e;
+            cursor: pointer;
+            border-bottom: 1px solid transparent;
+            margin-bottom: -1px;
+        }
+
+        .tab.active {
+            color: #262626;
+            border-bottom-color: #262626;
+        }
+
+        .posts {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding: 20px;
+        }
+
+        .post {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .post:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .post-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            color: white;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .post:hover .post-overlay {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .profile-top {
+                gap: 30px;
+            }
+
+            .avatar {
+                width: 100px;
+                height: 100px;
+                font-size: 50px;
+            }
+
+            .profile-details {
+                padding-top: 20px;
+            }
+
+            .username {
+                font-size: 20px;
+            }
+
+            .stats {
+                gap: 20px;
+                font-size: 14px;
+            }
+
+            .posts {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="logo">Socialgram</div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link" title="Home">🏠</a>
+                <a href="messages.html" class="nav-link" title="Messages">💬</a>
+                <a href="profile.html" class="nav-link" title="Profile">👤</a>
+            </div>
+        </div>
+
+        <div class="cover"></div>
+        
+        <div class="profile-container">
+            <div class="profile-top">
+                <div class="avatar">👤</div>
+                
+                <div class="profile-details">
+                    <div class="username-section">
+                        <h1 class="username">Parallelogram_Best_Shape</h1>
+                        <span class="verified">✓</span>
+                        <div class="action-btns">
+                            <button class="btn btn-primary">Follow</button>
+                            <button class="btn btn-secondary">Message</button>
+                        </div>
+                    </div>
+
+                    <div class="stats">
+                        <span class="stat"><strong>156</strong> posts</span>
+                        <span class="stat"><strong>3,847</strong> followers</span>
+                        <span class="stat"><strong>892</strong> following</span>
+                    </div>
+
+                    <div class="bio-section">
+                        <div class="name">Your Full Name</div>
+                        <div class="bio-text">
+                            ✨ Content creator & photographer<br>
+                            🌍 Traveling the world one click at a time<br>
+                            📩 Collabs: contact@email.com
+                        </div>
+                        <div class="tags">
+                            <span class="tag">Creator</span>
+                            <span class="tag">Photography</span>
+                            <span class="tag">Travel</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlights">
+            <div class="highlight">
+                <div class="highlight-icon">📸</div>
+                <div class="highlight-label">Travel</div>
+            </div>
+            <div class="highlight">
+                <div class="highlight-icon">🎨</div>
+                <div class="highlight-label">Art</div>
+            </div>
+            <div class="highlight">
+                <div class="highlight-icon">🍕</div>
+                <div class="highlight-label">Food</div>
+            </div>
+            <div class="highlight">
+                <div class="highlight-icon">🎵</div>
+                <div class="highlight-label">Music</div>
+            </div>
+            <div class="highlight">
+                <div class="highlight-icon">💼</div>
+                <div class="highlight-label">Work</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active">POSTS</div>
+            <div class="tab">REELS</div>
+            <div class="tab">TAGGED</div>
+        </div>
+
+        <div class="posts" id="posts"></div>
+    </div>
+
+    <script>
+        const gradients = [
+            'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+            'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+            'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+            'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+            'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
+            'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+            'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+            'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)'
+        ];
+
+        const postsContainer = document.getElementById('posts');
+
+        for (let i = 0; i < 15; i++) {
+            const post = document.createElement('div');
+            post.className = 'post';
+            post.style.background = gradients[i % gradients.length];
+            
+            const likes = Math.floor(Math.random() * 5000) + 500;
+            const comments = Math.floor(Math.random() * 200) + 20;
+            
+            post.innerHTML = `
+                <div class="post-overlay">
+                    <span>❤️ ${likes.toLocaleString()}</span>
+                    <span>💬 ${comments}</span>
+                </div>
+            `;
+            
+            postsContainer.appendChild(post);
+        }
+    </script>
+</body>
+</html>
