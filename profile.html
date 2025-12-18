@@ -22,7 +22,6 @@
             align-items: flex-start;
         }
 
-        /* Page transition overlay */
         .page-transition {
             position: fixed;
             top: 0;
@@ -54,6 +53,158 @@
             50% { transform: scale(1.1); }
         }
 
+        .customize-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 300px;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .customize-panel.hidden {
+            transform: translateX(calc(100% + 40px));
+        }
+
+        .customize-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .customize-panel::-webkit-scrollbar-thumb {
+            background: #dbdbdb;
+            border-radius: 10px;
+        }
+
+        .toggle-panel-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            transition: all 0.3s;
+        }
+
+        .toggle-panel-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .customize-panel h3 {
+            margin-bottom: 15px;
+            color: #262626;
+            font-size: 18px;
+        }
+
+        .image-upload {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #efefef;
+        }
+
+        .image-upload:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .image-upload label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #262626;
+            margin-bottom: 8px;
+        }
+
+        .upload-btn {
+            width: 100%;
+            padding: 8px 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .save-config-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+
+        .save-config-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(67, 233, 123, 0.4);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .preview-thumb {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-top: 8px;
+            border: 2px solid #667eea;
+        }
+
+        .config-output {
+            margin-top: 15px;
+            padding: 12px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 11px;
+            word-break: break-all;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .config-output.show {
+            display: block;
+        }
+
+        .instructions {
+            margin-top: 10px;
+            padding: 10px;
+            background: #fff3cd;
+            border-radius: 8px;
+            font-size: 11px;
+            line-height: 1.4;
+            color: #856404;
+            display: none;
+        }
+
         .page-wrapper {
             display: flex;
             gap: 30px;
@@ -80,6 +231,13 @@
         .sidebar-logo {
             font-size: 32px;
             margin-bottom: 20px;
+        }
+
+        .sidebar-logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
         }
 
         .sidebar-link {
@@ -144,6 +302,8 @@
         .cover {
             height: 280px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-size: cover;
+            background-position: center;
         }
 
         .profile-container {
@@ -170,6 +330,13 @@
             align-items: center;
             justify-content: center;
             font-size: 80px;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .profile-details {
@@ -277,43 +444,38 @@
             display: flex;
             gap: 30px;
             padding: 25px 40px;
-            border-top: 1px solid #dbdbdb;
-            border-bottom: 1px solid #dbdbdb;
             overflow-x: auto;
-        }
-
-        .highlights::-webkit-scrollbar {
-            height: 6px;
-        }
-
-        .highlights::-webkit-scrollbar-thumb {
-            background: #dbdbdb;
-            border-radius: 10px;
+            border-bottom: 1px solid #dbdbdb;
         }
 
         .highlight {
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
             cursor: pointer;
             flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+
+        .highlight:hover {
+            transform: scale(1.05);
         }
 
         .highlight-icon {
-            width: 77px;
-            height: 77px;
+            width: 84px;
+            height: 84px;
             border-radius: 50%;
-            border: 3px solid #667eea;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
-            background: white;
-            margin-bottom: 8px;
+            font-size: 36px;
+            border: 3px solid #dbdbdb;
             transition: all 0.3s;
         }
 
         .highlight:hover .highlight-icon {
-            transform: scale(1.1);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
         }
 
         .highlight-label {
@@ -363,6 +525,8 @@
             position: relative;
             transition: all 0.3s;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background-size: cover;
+            background-position: center;
         }
 
         .post:hover {
@@ -458,9 +622,91 @@
         <div class="transition-logo">📷</div>
     </div>
 
+    <button class="toggle-panel-btn" id="toggleBtn" onclick="togglePanel()">🎨</button>
+
+    <div class="customize-panel hidden" id="customizePanel">
+        <h3>🎨 Customize Profile</h3>
+        
+        <div class="image-upload">
+            <label>Logo Image</label>
+            <input type="file" id="logoInput" class="file-input" accept="image/*">
+            <button class="upload-btn" onclick="document.getElementById('logoInput').click()">Choose Logo</button>
+            <img id="logoPreview" class="preview-thumb" style="display: none;">
+        </div>
+
+        <div class="image-upload">
+            <label>Profile Avatar</label>
+            <input type="file" id="avatarInput" class="file-input" accept="image/*">
+            <button class="upload-btn" onclick="document.getElementById('avatarInput').click()">Choose Avatar</button>
+            <img id="avatarPreview" class="preview-thumb" style="display: none;">
+        </div>
+
+        <div class="image-upload">
+            <label>Cover Image</label>
+            <input type="file" id="coverInput" class="file-input" accept="image/*">
+            <button class="upload-btn" onclick="document.getElementById('coverInput').click()">Choose Cover</button>
+            <img id="coverPreview" class="preview-thumb" style="display: none;">
+        </div>
+
+        <div class="image-upload">
+            <label>Post 1</label>
+            <input type="file" id="post0Input" class="file-input" accept="image/*">
+            <button class="upload-btn" onclick="document.getElementById('post0Input').click()">Choose Image</button>
+            <img id="post0Preview" class="preview-thumb" style="display: none;">
+        </div>
+
+        <div class="image-upload">
+            <label>Post 2</label>
+            <input type="file" id="post1Input" class="file-input" accept="image/*">
+            <button class="upload-btn" onclick="document.getElementById('post1Input').click()">Choose Image</button>
+            <img id="post1Preview" class="preview-thumb" style="display: none;">
+        </div>
+
+        <div class="image-upload">
+            <label>Post 3</label>
+            <input type="file" id="post2Input" class="file-input" accept="image/*">
+            <button class="upload-btn" onclick="document.getElementById('post2Input').click()">Choose Image</button>
+            <img id="post2Preview" class="preview-thumb" style="display: none;">
+        </div>
+
+        <div class="image-upload">
+            <label>Post 4</label>
+            <input type="file" id="post3Input" class="file-input" accept="image/*">
+            <button class="upload-btn" onclick="document.getElementById('post3Input').click()">Choose Image</button>
+            <img id="post3Preview" class="preview-thumb" style="display: none;">
+        </div>
+
+        <div class="image-upload">
+            <label>Post 5</label>
+            <input type="file" id="post4Input" class="file-input" accept="image/*">
+            <button class="upload-btn" onclick="document.getElementById('post4Input').click()">Choose Image</button>
+            <img id="post4Preview" class="preview-thumb" style="display: none;">
+        </div>
+
+        <div class="image-upload">
+            <label>Post 6</label>
+            <input type="file" id="post5Input" class="file-input" accept="image/*">
+            <button class="upload-btn" onclick="document.getElementById('post5Input').click()">Choose Image</button>
+            <img id="post5Preview" class="preview-thumb" style="display: none;">
+        </div>
+
+        <button class="save-config-btn" onclick="generateConfig()">💾 Generate Config</button>
+        
+        <div class="config-output" id="configOutput"></div>
+        <div class="instructions" id="instructions">
+            📋 Instructions:<br>
+            1. Click the config above to copy it<br>
+            2. Create a new file: images-config-profile.js<br>
+            3. Paste the copied code<br>
+            4. Add this script tag to profile.html before closing &lt;/body&gt;:<br>
+            &lt;script src="images-config-profile.js"&gt;&lt;/script&gt;<br>
+            5. Your images will load automatically!
+        </div>
+    </div>
+
     <div class="page-wrapper">
         <div class="sidebar">
-            <div class="sidebar-logo">📷</div>
+            <div class="sidebar-logo" id="sidebarLogo">📷</div>
             <a href="index.html" class="sidebar-link" title="Home" onclick="return navigateTo(event, 'index.html')">🏠</a>
             <a href="messages.html" class="sidebar-link" title="Messages" onclick="return navigateTo(event, 'messages.html')">💬</a>
             <a href="profile.html" class="sidebar-link active" title="Profile" onclick="return navigateTo(event, 'profile.html')">👤</a>
@@ -471,11 +717,11 @@
                 <div class="logo">Shapegram</div>
             </div>
 
-            <div class="cover"></div>
+            <div class="cover" id="coverImage"></div>
         
             <div class="profile-container">
                 <div class="profile-top">
-                    <div class="avatar">👤</div>
+                    <div class="avatar" id="avatarImage">👤</div>
                     
                     <div class="profile-details">
                         <div class="username-section">
@@ -498,7 +744,7 @@
                             <div class="bio-text">
                                 ✨ Content creator & photographer<br>
                                 🌍 Traveling the world one click at a time<br>
-                                📩 Collabs: contact@email.com
+                                📩 Collabs: contact@example.com
                             </div>
                             <div class="tags">
                                 <span class="tag">Creator</span>
@@ -544,7 +790,6 @@
     </div>
 
     <script>
-        // Page transition function
         function navigateTo(event, url) {
             event.preventDefault();
             const transition = document.getElementById('pageTransition');
@@ -557,36 +802,181 @@
             return false;
         }
 
+        function togglePanel() {
+            const panel = document.getElementById('customizePanel');
+            const btn = document.getElementById('toggleBtn');
+            panel.classList.toggle('hidden');
+            btn.textContent = panel.classList.contains('hidden') ? '🎨' : '✖️';
+        }
+
+        const userImages = {
+            logo: null,
+            avatar: null,
+            cover: null,
+            posts: [null, null, null, null, null, null]
+        };
+
         const gradients = [
             'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
             'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
             'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
             'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
             'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-            'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
-            'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
-            'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
-            'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)'
+            'linear-gradient(135deg, #30cfd0 0%, #330867 100%)'
         ];
 
-        const postsContainer = document.getElementById('posts');
+        function setupImageUpload(inputId, callback) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(inputId.replace('Input', 'Preview'));
+            
+            input.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                        callback(e.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
 
-        for (let i = 0; i < 15; i++) {
-            const post = document.createElement('div');
-            post.className = 'post';
-            post.style.background = gradients[i % gradients.length];
+        setupImageUpload('logoInput', (data) => {
+            userImages.logo = data;
+            updateLogo();
+        });
+
+        setupImageUpload('avatarInput', (data) => {
+            userImages.avatar = data;
+            updateAvatar();
+        });
+
+        setupImageUpload('coverInput', (data) => {
+            userImages.cover = data;
+            updateCover();
+        });
+
+        for (let i = 0; i < 6; i++) {
+            setupImageUpload(`post${i}Input`, (data) => {
+                userImages.posts[i] = data;
+                renderPosts();
+            });
+        }
+
+        function updateLogo() {
+            const logoEl = document.getElementById('sidebarLogo');
+            if (userImages.logo) {
+                logoEl.innerHTML = `<img src="${userImages.logo}" alt="Logo">`;
+            }
+        }
+
+        function updateAvatar() {
+            const avatarEl = document.getElementById('avatarImage');
+            if (userImages.avatar) {
+                avatarEl.innerHTML = `<img src="${userImages.avatar}" alt="Avatar">`;
+            }
+        }
+
+        function updateCover() {
+            const coverEl = document.getElementById('coverImage');
+            if (userImages.cover) {
+                coverEl.style.backgroundImage = `url(${userImages.cover})`;
+            }
+        }
+
+        function renderPosts() {
+            const postsContainer = document.getElementById('posts');
+            postsContainer.innerHTML = '';
+
+            for (let i = 0; i < 6; i++) {
+                const post = document.createElement('div');
+                post.className = 'post';
+                
+                if (userImages.posts[i]) {
+                    post.style.backgroundImage = `url(${userImages.posts[i]})`;
+                } else {
+                    post.style.background = gradients[i];
+                }
+                
+                const likes = Math.floor(Math.random() * 5000) + 500;
+                const comments = Math.floor(Math.random() * 200) + 20;
+                
+                post.innerHTML = `
+                    <div class="post-overlay">
+                        <span>❤️ ${likes.toLocaleString()}</span>
+                        <span>💬 ${comments}</span>
+                    </div>
+                `;
+                
+                postsContainer.appendChild(post);
+            }
+        }
+
+        function generateConfig() {
+            const config = `// Shapegram Profile Images Configuration
+// Copy this entire file and save as images-config-profile.js
+const IMAGES_CONFIG_PROFILE = ${JSON.stringify(userImages, null, 2)};
+
+// Auto-load images when page loads
+if (typeof loadImagesFromConfig === 'function') {
+    loadImagesFromConfig(IMAGES_CONFIG_PROFILE);
+}`;
+
+            const output = document.getElementById('configOutput');
+            const instructions = document.getElementById('instructions');
+            output.textContent = config;
+            output.classList.add('show');
+            instructions.style.display = 'block';
             
-            const likes = Math.floor(Math.random() * 5000) + 500;
-            const comments = Math.floor(Math.random() * 200) + 20;
-            
-            post.innerHTML = `
-                <div class="post-overlay">
-                    <span>❤️ ${likes.toLocaleString()}</span>
-                    <span>💬 ${comments}</span>
-                </div>
-            `;
-            
-            postsContainer.appendChild(post);
+            // Auto-select text for easy copying
+            output.onclick = () => {
+                const range = document.createRange();
+                range.selectNodeContents(output);
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+                
+                // Try to copy to clipboard
+                try {
+                    document.execCommand('copy');
+                    output.style.background = '#d4edda';
+                    setTimeout(() => {
+                        output.style.background = '#f5f5f5';
+                    }, 1000);
+                } catch (err) {
+                    console.log('Copy failed, please select and copy manually');
+                }
+            };
+        }
+
+        // Try to load config if it exists
+        function loadImagesFromConfig(config) {
+            if (config.logo) {
+                userImages.logo = config.logo;
+                updateLogo();
+            }
+            if (config.avatar) {
+                userImages.avatar = config.avatar;
+                updateAvatar();
+            }
+            if (config.cover) {
+                userImages.cover = config.cover;
+                updateCover();
+            }
+            if (config.posts) {
+                userImages.posts = config.posts;
+            }
+            renderPosts();
+        }
+
+        // Initial render
+        renderPosts();
+
+        // Try to load saved config
+        if (typeof IMAGES_CONFIG_PROFILE !== 'undefined') {
+            loadImagesFromConfig(IMAGES_CONFIG_PROFILE);
         }
 
         // Tab functionality
