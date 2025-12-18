@@ -1,1 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Socialgram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 935px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar {
+            background: white;
+            border-bottom: 1px solid #dbdbdb;
+            padding: 12px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #262626;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .nav-link:hover {
+            transform: scale(1.1);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stories {
+            padding: 20px 40px;
+            border-bottom: 1px solid #dbdbdb;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .stories::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .stories::-webkit-scrollbar-thumb {
+            background: #dbdbdb;
+            border-radius: 10px;
+        }
+
+        .story {
+            display: inline-block;
+            text-align: center;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+
+        .story-avatar {
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            border: 3px solid #667eea;
+            padding: 2px;
+            background: white;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            transition: transform 0.2s;
+        }
+
+        .story:hover .story-avatar {
+            transform: scale(1.1);
+        }
+
+        .story-username {
+            font-size: 12px;
+            color: #262626;
+            max-width: 66px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .feed {
+            max-height: 600px;
+            overflow-y: auto;
+            padding: 20px 0;
+        }
+
+        .feed::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .feed::-webkit-scrollbar-thumb {
+            background: #dbdbdb;
+            border-radius: 10px;
+        }
+
+        .post-card {
+            background: white;
+            margin: 0 auto 30px;
+            max-width: 614px;
+            border: 1px solid #dbdbdb;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            gap: 12px;
+        }
+
+        .post-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .post-username {
+            font-weight: 600;
+            font-size: 14px;
+            color: #262626;
+            flex: 1;
+        }
+
+        .post-menu {
+            font-size: 20px;
+            cursor: pointer;
+            color: #262626;
+        }
+
+        .post-image {
+            width: 100%;
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+        }
+
+        .post-actions {
+            padding: 12px 16px;
+            display: flex;
+            gap: 16px;
+            font-size: 24px;
+        }
+
+        .action-btn {
+            cursor: pointer;
+            transition: transform 0.2s;
+            background: none;
+            border: none;
+            font-size: 24px;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .post-likes {
+            padding: 0 16px 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #262626;
+        }
+
+        .post-caption {
+            padding: 0 16px 8px;
+            font-size: 14px;
+            color: #262626;
+        }
+
+        .post-caption .username {
+            font-weight: 600;
+            margin-right: 6px;
+        }
+
+        .post-time {
+            padding: 0 16px 12px;
+            font-size: 10px;
+            color: #8e8e8e;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 12px 20px;
+            }
+
+            .stories {
+                padding: 15px 20px;
+            }
+
+            .feed {
+                padding: 15px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="logo">Socialgram</div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link" title="Home">🏠</a>
+                <a href="messages.html" class="nav-link" title="Messages">💬</a>
+                <a href="profile.html" class="nav-link" title="Profile">👤</a>
+            </div>
+        </div>
+
+        <div class="stories" id="stories"></div>
+
+        <div class="feed" id="feed"></div>
+    </div>
+
+    <script>
+        // Generate Stories
+        const storiesContainer = document.getElementById('stories');
+        const storyEmojis = ['😊', '🎨', '🌟', '🎵', '🍕', '✈️', '📸', '💪', '🎮', '📚'];
+        const storyNames = ['your_story', 'alex_art', 'travel_bug', 'foodie_life', 'music_lover', 'gym_rat', 'photo_pro', 'gamer_dude', 'book_worm', 'nature_enthusiast'];
+
+        for (let i = 0; i < 10; i++) {
+            const story = document.createElement('div');
+            story.className = 'story';
+            story.innerHTML = `
+                <div class="story-avatar">${storyEmojis[i]}</div>
+                <div class="story-username">${storyNames[i]}</div>
+            `;
+            storiesContainer.appendChild(story);
+        }
+
+        // Generate Feed Posts
+        const feedContainer = document.getElementById('feed');
+        const gradients = [
+            'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+            'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+            'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+            'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+            'linear-gradient(135deg, #30cfd0 0%, #330867 100%)'
+        ];
+
+        const usernames = ['alex_creates', 'photo_enthusiast', 'travel_diary', 'art_lover', 'food_adventures', 'music_vibes'];
+        const captions = [
+            'Living my best life! ✨',
+            'Beautiful sunset today 🌅',
+            'New adventure begins 🚀',
+            'Art is life 🎨',
+            'Delicious meal! 😋',
+            'Vibing to this tune 🎵'
+        ];
+        const emojis = ['🎨', '📸', '✈️', '🎭', '🍕', '🎵'];
+
+        for (let i = 0; i < 6; i++) {
+            const likes = Math.floor(Math.random() * 5000) + 500;
+            const hours = Math.floor(Math.random() * 12) + 1;
+            
+            const postCard = document.createElement('div');
+            postCard.className = 'post-card';
+            postCard.innerHTML = `
+                <div class="post-header">
+                    <div class="post-avatar">${emojis[i]}</div>
+                    <div class="post-username">${usernames[i]}</div>
+                    <div class="post-menu">⋯</div>
+                </div>
+                <div class="post-image" style="background: ${gradients[i]}">
+                    ${emojis[i]}
+                </div>
+                <div class="post-actions">
+                    <button class="action-btn">❤️</button>
+                    <button class="action-btn">💬</button>
+                    <button class="action-btn">📤</button>
+                </div>
+                <div class="post-likes">${likes.toLocaleString()} likes</div>
+                <div class="post-caption">
+                    <span class="username">${usernames[i]}</span>
+                    ${captions[i]}
+                </div>
+                <div class="post-time">${hours} hours ago</div>
+            `;
+            feedContainer.appendChild(postCard);
+        }
+    </script>
+</body>
+</html>
