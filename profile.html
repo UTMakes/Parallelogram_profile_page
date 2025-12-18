@@ -22,6 +22,38 @@
             align-items: flex-start;
         }
 
+        /* Page transition overlay */
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .page-transition.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .transition-logo {
+            font-size: 64px;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
         .page-wrapper {
             display: flex;
             gap: 30px;
@@ -71,7 +103,6 @@
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
         }
 
-        /* Page transition */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -151,6 +182,7 @@
             align-items: center;
             gap: 15px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         .username {
@@ -250,9 +282,19 @@
             overflow-x: auto;
         }
 
+        .highlights::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .highlights::-webkit-scrollbar-thumb {
+            background: #dbdbdb;
+            border-radius: 10px;
+        }
+
         .highlight {
             text-align: center;
             cursor: pointer;
+            flex-shrink: 0;
         }
 
         .highlight-icon {
@@ -294,6 +336,11 @@
             cursor: pointer;
             border-bottom: 1px solid transparent;
             margin-bottom: -1px;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            color: #262626;
         }
 
         .tab.active {
@@ -362,6 +409,10 @@
                 display: none;
             }
 
+            .profile-container {
+                padding: 0 20px 30px;
+            }
+
             .profile-top {
                 gap: 30px;
             }
@@ -380,25 +431,39 @@
                 font-size: 20px;
             }
 
+            .username-section {
+                gap: 10px;
+            }
+
             .stats {
                 gap: 20px;
                 font-size: 14px;
             }
 
+            .highlights {
+                padding: 20px;
+                gap: 20px;
+            }
+
             .posts {
                 grid-template-columns: repeat(3, 1fr);
                 gap: 8px;
+                padding: 10px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="page-transition" id="pageTransition">
+        <div class="transition-logo">📷</div>
+    </div>
+
     <div class="page-wrapper">
         <div class="sidebar">
-            <div class="sidebar-logo">📐</div>
-            <a href="index.html" class="sidebar-link" title="Home">🏠</a>
-            <a href="messages.html" class="sidebar-link" title="Messages">💬</a>
-            <a href="profile.html" class="sidebar-link active" title="Profile">👤</a>
+            <div class="sidebar-logo">📷</div>
+            <a href="index.html" class="sidebar-link" title="Home" onclick="return navigateTo(event, 'index.html')">🏠</a>
+            <a href="messages.html" class="sidebar-link" title="Messages" onclick="return navigateTo(event, 'messages.html')">💬</a>
+            <a href="profile.html" class="sidebar-link active" title="Profile" onclick="return navigateTo(event, 'profile.html')">👤</a>
         </div>
 
         <div class="container">
@@ -408,76 +473,90 @@
 
             <div class="cover"></div>
         
-        <div class="profile-container">
-            <div class="profile-top">
-                <div class="avatar">👤</div>
-                
-                <div class="profile-details">
-                    <div class="username-section">
-                        <h1 class="username">Parallelogram_Best_Shape</h1>
-                        <span class="verified">✓</span>
-                        <div class="action-btns">
-                            <button class="btn btn-primary">Follow</button>
-                            <button class="btn btn-secondary">Message</button>
+            <div class="profile-container">
+                <div class="profile-top">
+                    <div class="avatar">👤</div>
+                    
+                    <div class="profile-details">
+                        <div class="username-section">
+                            <h1 class="username">Parallelogram_Best_Shape</h1>
+                            <span class="verified">✔</span>
+                            <div class="action-btns">
+                                <button class="btn btn-primary">Follow</button>
+                                <button class="btn btn-secondary">Message</button>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="stats">
-                        <span class="stat"><strong>156</strong> posts</span>
-                        <span class="stat"><strong>3,847</strong> followers</span>
-                        <span class="stat"><strong>892</strong> following</span>
-                    </div>
-
-                    <div class="bio-section">
-                        <div class="name">Your Full Name</div>
-                        <div class="bio-text">
-                            ✨ Content creator & photographer<br>
-                            🌍 Traveling the world one click at a time<br>
-                            📩 Collabs: contact@email.com
+                        <div class="stats">
+                            <span class="stat"><strong>156</strong> posts</span>
+                            <span class="stat"><strong>3,847</strong> followers</span>
+                            <span class="stat"><strong>892</strong> following</span>
                         </div>
-                        <div class="tags">
-                            <span class="tag">Creator</span>
-                            <span class="tag">Photography</span>
-                            <span class="tag">Travel</span>
+
+                        <div class="bio-section">
+                            <div class="name">Your Full Name</div>
+                            <div class="bio-text">
+                                ✨ Content creator & photographer<br>
+                                🌍 Traveling the world one click at a time<br>
+                                📩 Collabs: contact@email.com
+                            </div>
+                            <div class="tags">
+                                <span class="tag">Creator</span>
+                                <span class="tag">Photography</span>
+                                <span class="tag">Travel</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="highlights">
-            <div class="highlight">
-                <div class="highlight-icon">📸</div>
-                <div class="highlight-label">Travel</div>
+            <div class="highlights">
+                <div class="highlight">
+                    <div class="highlight-icon">📸</div>
+                    <div class="highlight-label">Travel</div>
+                </div>
+                <div class="highlight">
+                    <div class="highlight-icon">🎨</div>
+                    <div class="highlight-label">Art</div>
+                </div>
+                <div class="highlight">
+                    <div class="highlight-icon">🍕</div>
+                    <div class="highlight-label">Food</div>
+                </div>
+                <div class="highlight">
+                    <div class="highlight-icon">🎵</div>
+                    <div class="highlight-label">Music</div>
+                </div>
+                <div class="highlight">
+                    <div class="highlight-icon">💼</div>
+                    <div class="highlight-label">Work</div>
+                </div>
             </div>
-            <div class="highlight">
-                <div class="highlight-icon">🎨</div>
-                <div class="highlight-label">Art</div>
-            </div>
-            <div class="highlight">
-                <div class="highlight-icon">🍕</div>
-                <div class="highlight-label">Food</div>
-            </div>
-            <div class="highlight">
-                <div class="highlight-icon">🎵</div>
-                <div class="highlight-label">Music</div>
-            </div>
-            <div class="highlight">
-                <div class="highlight-icon">💼</div>
-                <div class="highlight-label">Work</div>
-            </div>
-        </div>
 
-        <div class="tabs">
-            <div class="tab active">POSTS</div>
-            <div class="tab">REELS</div>
-            <div class="tab">TAGGED</div>
-        </div>
+            <div class="tabs">
+                <div class="tab active">POSTS</div>
+                <div class="tab">REELS</div>
+                <div class="tab">TAGGED</div>
+            </div>
 
-        <div class="posts" id="posts"></div>
+            <div class="posts" id="posts"></div>
+        </div>
     </div>
 
     <script>
+        // Page transition function
+        function navigateTo(event, url) {
+            event.preventDefault();
+            const transition = document.getElementById('pageTransition');
+            transition.classList.add('active');
+            
+            setTimeout(() => {
+                window.location.href = url;
+            }, 400);
+            
+            return false;
+        }
+
         const gradients = [
             'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
             'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
@@ -509,6 +588,15 @@
             
             postsContainer.appendChild(post);
         }
+
+        // Tab functionality
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
     </script>
 </body>
 </html>
