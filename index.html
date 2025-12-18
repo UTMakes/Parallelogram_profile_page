@@ -1,1 +1,443 @@
+.highlight-circle {
+            width: 77px;
+            height: 77px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            background: linear-gradient(white, white) padding-box,
+                        linear-gradient(135deg, #667eea, #764ba2) border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            font-size: 32px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
 
+        .highlight-circle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 935px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .cover-photo {
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+        }
+
+        .header {
+            display: flex;
+            padding: 0 40px 40px;
+            gap: 80px;
+            align-items: center;
+            position: relative;
+            margin-top: -75px;
+        }
+
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: white;
+            padding: 5px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            border: 3px solid white;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid white;
+            object-fit: cover;
+            background: #e1e8ed;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .username-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .username {
+            font-size: 28px;
+            font-weight: 300;
+        }
+
+        .verified {
+            color: #0095f6;
+            font-size: 20px;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #2d3748;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .stats {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .stat strong {
+            font-weight: 600;
+        }
+
+        .bio {
+            margin-top: 15px;
+        }
+
+        .bio .name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .bio .description {
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .tag {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .bio a {
+            color: #00376b;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .highlights {
+            display: flex;
+            gap: 25px;
+            padding: 20px 40px;
+            overflow-x: auto;
+            border-bottom: 1px solid #dbdbdb;
+        }
+
+        .highlight {
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .highlight-circle {
+            width: 77px;
+            height: 77px;
+            border-radius: 50%;
+            border: 2px solid #dbdbdb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            background: #fafafa;
+        }
+
+        .highlight-circle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .highlight-name {
+            font-size: 12px;
+            color: #262626;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            border-bottom: 1px solid #dbdbdb;
+        }
+
+        .tab {
+            padding: 15px 0;
+            margin: 0 30px;
+            cursor: pointer;
+            font-size: 12px;
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: #8e8e8e;
+            border-bottom: 1px solid transparent;
+            margin-bottom: -1px;
+        }
+
+        .tab.active {
+            color: #262626;
+            border-bottom-color: #262626;
+        }
+
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding: 20px;
+        }
+
+        .post {
+            aspect-ratio: 1;
+            background: #e1e8ed;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .post:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .post img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .post:hover .overlay {
+            opacity: 1;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            color: white;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .overlay span::before {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        .likes::before {
+            content: '❤';
+        }
+
+        .comments::before {
+            content: '💬';
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                gap: 30px;
+                padding: 20px;
+            }
+
+            .profile-pic {
+                width: 100px;
+                height: 100px;
+            }
+
+            .username {
+                font-size: 20px;
+            }
+
+            .stats {
+                gap: 20px;
+                font-size: 14px;
+            }
+
+            .highlights {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="cover-photo"></div>
+        
+        <div class="header">
+            <div class="profile-pic">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect fill='%23e1e8ed' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='80' fill='%23657786'%3E👤%3C/text%3E%3C/svg%3E" alt="Profile">
+            </div>
+            <div class="profile-info">
+                <div class="username-row">
+                    <h1 class="username">Parallelogram_Best_Shape</h1>
+                    <span class="verified">✓</span>
+                    <button class="btn">Follow</button>
+                    <button class="btn btn-secondary">Message</button>
+                </div>
+                <div class="stats">
+                    <div class="stat"><strong>156</strong> posts</div>
+                    <div class="stat"><strong>3,847</strong> followers</div>
+                    <div class="stat"><strong>892</strong> following</div>
+                </div>
+                <div class="bio">
+                    <div class="name">Your Full Name</div>
+                    <div class="description">
+                        ✨ Content creator & photographer<br>
+                        🌍 Traveling the world one click at a time<br>
+                        📩 Collabs: <a href="#">contact@email.com</a>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">Creator</span>
+                        <span class="tag">Photography</span>
+                        <span class="tag">Travel</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlights">
+            <div class="highlight">
+                <div class="highlight-circle">📸</div>
+                <div class="highlight-name">Travel</div>
+            </div>
+            <div class="highlight">
+                <div class="highlight-circle">🎨</div>
+                <div class="highlight-name">Art</div>
+            </div>
+            <div class="highlight">
+                <div class="highlight-circle">🍕</div>
+                <div class="highlight-name">Food</div>
+            </div>
+            <div class="highlight">
+                <div class="highlight-circle">🎵</div>
+                <div class="highlight-name">Music</div>
+            </div>
+            <div class="highlight">
+                <div class="highlight-circle">💼</div>
+                <div class="highlight-name">Work</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active">POSTS</div>
+            <div class="tab">REELS</div>
+            <div class="tab">TAGGED</div>
+        </div>
+
+        <div class="posts-grid" id="postsGrid">
+            <!-- Posts will be generated by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Generate sample posts
+        const postsGrid = document.getElementById('postsGrid');
+        const colors = [
+            'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+            'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+            'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+            'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+            'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
+            'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+            'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+            'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)'
+        ];
+        
+        for (let i = 0; i < 15; i++) {
+            const post = document.createElement('div');
+            post.className = 'post';
+            
+            const gradient = colors[i % colors.length];
+            const likes = Math.floor(Math.random() * 5000) + 500;
+            const comments = Math.floor(Math.random() * 200) + 20;
+            
+            post.innerHTML = `
+                <div style="width: 100%; height: 100%; background: ${gradient}; display: flex; align-items: center; justify-content: center;">
+                    <div style="width: 80px; height: 80px; background: white; opacity: 0.2; border-radius: 50%;"></div>
+                </div>
+                <div class="overlay">
+                    <span class="likes">${likes.toLocaleString()}</span>
+                    <span class="comments">${comments}</span>
+                </div>
+            `;
+            
+            postsGrid.appendChild(post);
+        }
+    </script>
+</body>
+</html>
