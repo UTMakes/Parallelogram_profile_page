@@ -22,6 +22,37 @@
             align-items: flex-start;
         }
 
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .page-transition.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .transition-logo {
+            font-size: 64px;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
         .customize-panel {
             position: fixed;
             top: 20px;
@@ -112,6 +143,52 @@
             object-fit: cover;
             margin-top: 8px;
             border: 2px solid #667eea;
+        }
+
+        .save-config-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+
+        .save-config-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(67, 233, 123, 0.4);
+        }
+
+        .config-output {
+            margin-top: 15px;
+            padding: 12px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 11px;
+            word-break: break-all;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .config-output.show {
+            display: block;
+        }
+
+        .instructions {
+            margin-top: 10px;
+            padding: 10px;
+            background: #fff3cd;
+            border-radius: 8px;
+            font-size: 11px;
+            line-height: 1.4;
+            color: #856404;
         }
 
         .page-wrapper {
@@ -486,6 +563,10 @@
     </style>
 </head>
 <body>
+    <div class="page-transition" id="pageTransition">
+        <div class="transition-logo">📷</div>
+    </div>
+
     <button class="toggle-panel-btn" onclick="togglePanel()" id="toggleBtn">🎨</button>
 
     <div class="customize-panel hidden" id="customizePanel">
@@ -525,14 +606,27 @@
             <input type="file" id="trapezoidInput" class="file-input" accept="image/*">
             <img id="trapezoidPreview" class="preview-thumb" style="display:none;">
         </div>
+
+        <button class="save-config-btn" onclick="generateConfig()">💾 Generate Config Code</button>
+        
+        <div class="config-output" id="configOutput"></div>
+        
+        <div class="instructions" style="display:none;" id="instructions">
+            <strong>📝 How to save:</strong><br>
+            1. Copy the code above<br>
+            2. Create a file called <code>images-config.js</code><br>
+            3. Paste the code in that file<br>
+            4. Upload to GitHub with your HTML files<br>
+            5. Your images will load automatically!
+        </div>
     </div>
 
     <div class="page-wrapper">
         <div class="sidebar">
             <div class="sidebar-logo" id="sidebarLogo">📷</div>
-            <a class="sidebar-link" title="Home" onclick="window.location.href='index.html'">🏠</a>
-            <a class="sidebar-link active" title="Messages" onclick="window.location.href='messages.html'">💬</a>
-            <a class="sidebar-link" title="Profile" onclick="window.location.href='profile.html'">👤</a>
+            <a class="sidebar-link" title="Home" onclick="return navigateTo(event, 'index.html')">🏠</a>
+            <a class="sidebar-link active" title="Messages" onclick="return navigateTo(event, 'messages.html')">💬</a>
+            <a class="sidebar-link" title="Profile" onclick="return navigateTo(event, 'profile.html')">👤</a>
         </div>
 
         <div class="container">
@@ -553,6 +647,18 @@
     </div>
 
     <script>
+        function navigateTo(event, url) {
+            event.preventDefault();
+            const transition = document.getElementById('pageTransition');
+            transition.classList.add('active');
+            
+            setTimeout(() => {
+                window.location.href = url;
+            }, 400);
+            
+            return false;
+        }
+
         function togglePanel() {
             const panel = document.getElementById('customizePanel');
             const btn = document.getElementById('toggleBtn');
@@ -702,6 +808,61 @@
 
         // Initial render
         renderConversations();
+
+        function generateConfig() {
+            const config = `// Shapegram Messages Images Configuration
+// Copy this entire file and save as images-config-messages.js
+const IMAGES_CONFIG_MESSAGES = ${JSON.stringify(userImages, null, 2)};
+
+// Auto-load images when page loads
+if (typeof loadImagesFromConfig === 'function') {
+    loadImagesFromConfig(IMAGES_CONFIG_MESSAGES);
+}`;
+
+            const output = document.getElementById('configOutput');
+            const instructions = document.getElementById('instructions');
+            output.textContent = config;
+            output.classList.add('show');
+            instructions.style.display = 'block';
+            
+            // Auto-select text for easy copying
+            output.onclick = () => {
+                const range = document.createRange();
+                range.selectNodeContents(output);
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+                
+                // Try to copy to clipboard
+                try {
+                    document.execCommand('copy');
+                    output.style.background = '#d4edda';
+                    setTimeout(() => {
+                        output.style.background = '#f5f5f5';
+                    }, 1000);
+                } catch (err) {
+                    console.log('Copy failed, please select and copy manually');
+                }
+            };
+        }
+
+        // Try to load config if it exists
+        function loadImagesFromConfig(config) {
+            if (config.logo) {
+                userImages.logo = config.logo;
+                updateLogo();
+            }
+            if (config.square) userImages.square = config.square;
+            if (config.rectangle) userImages.rectangle = config.rectangle;
+            if (config.rhombus) userImages.rhombus = config.rhombus;
+            if (config.trapezoid) userImages.trapezoid = config.trapezoid;
+            renderConversations();
+        }
+
+        // Try to load saved config
+        if (typeof IMAGES_CONFIG_MESSAGES !== 'undefined') {
+            loadImagesFromConfig(IMAGES_CONFIG_MESSAGES);
+        }
     </script>
 </body>
 </html>
