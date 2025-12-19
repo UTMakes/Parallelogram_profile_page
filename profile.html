@@ -598,12 +598,81 @@
             justify-content: center;
             font-size: 100px;
             min-height: 400px;
+            position: relative;
+            overflow: hidden;
         }
 
         .popup-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .popup-image img.active {
+            opacity: 1;
+        }
+
+        .popup-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 16px 12px;
+            font-size: 24px;
+            cursor: pointer;
+            border-radius: 50%;
+            z-index: 10;
+            transition: all 0.3s;
+            display: none;
+        }
+
+        .popup-nav:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .popup-nav.show {
+            display: block;
+        }
+
+        .popup-nav.prev {
+            left: 16px;
+        }
+
+        .popup-nav.next {
+            right: 16px;
+        }
+
+        .popup-indicators {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .popup-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .popup-indicator.active {
+            background: white;
+            width: 24px;
+            border-radius: 4px;
         }
 
         .popup-timer {
@@ -784,10 +853,24 @@
         </div>
 
         <div class="image-upload">
-            <label>Friends Highlight</label>
-            <input type="file" id="friendsInput" class="file-input" accept="image/*">
-            <button class="upload-btn" onclick="document.getElementById('friendsInput').click()">Choose Friends Image</button>
-            <img id="friendsPreview" class="preview-thumb" style="display: none;">
+            <label>Friends Highlight - Image 1</label>
+            <input type="file" id="friends0Input" class="file-input" accept="image/*">
+            <button class="upload-btn" onclick="document.getElementById('friends0Input').click()">Choose Image 1</button>
+            <img id="friends0Preview" class="preview-thumb" style="display: none;">
+        </div>
+
+        <div class="image-upload">
+            <label>Friends Highlight - Image 2</label>
+            <input type="file" id="friends1Input" class="file-input" accept="image/*">
+            <button class="upload-btn" onclick="document.getElementById('friends1Input').click()">Choose Image 2</button>
+            <img id="friends1Preview" class="preview-thumb" style="display: none;">
+        </div>
+
+        <div class="image-upload">
+            <label>Friends Highlight - Image 3</label>
+            <input type="file" id="friends2Input" class="file-input" accept="image/*">
+            <button class="upload-btn" onclick="document.getElementById('friends2Input').click()">Choose Image 3</button>
+            <img id="friends2Preview" class="preview-thumb" style="display: none;">
         </div>
 
         <div class="image-upload">
@@ -964,7 +1047,7 @@
             avatar: null,
             cover: null,
             posts: [null, null, null, null, null, null],
-            friends: null,
+            friends: [null, null, null],
             extra: null
         };
 
@@ -1010,10 +1093,12 @@
             updateCover();
         });
 
-        setupImageUpload('friendsInput', (data) => {
-            userImages.friends = data;
-            updateHighlights();
-        });
+        for (let i = 0; i < 3; i++) {
+            setupImageUpload(`friends${i}Input`, (data) => {
+                userImages.friends[i] = data;
+                updateHighlights();
+            });
+        }
 
         setupImageUpload('extraInput', (data) => {
             userImages.extra = data;
@@ -1052,8 +1137,9 @@
             const friendsIcon = document.getElementById('friendsIcon');
             const extraIcon = document.getElementById('extraIcon');
             
-            if (userImages.friends) {
-                friendsIcon.innerHTML = `<img src="${userImages.friends}" alt="friends">`;
+            // Use first friends image for the icon
+            if (userImages.friends && userImages.friends[0]) {
+                friendsIcon.innerHTML = `<img src="${userImages.friends[0]}" alt="friends">`;
             }
             
             if (userImages.extra) {
@@ -1063,6 +1149,8 @@
 
         let popupTimer = null;
         let countdown = null;
+        let currentSlide = 0;
+        let slideInterval = null;
 
         function showHighlightPopup(type) {
             const popup = document.getElementById('highlightPopup');
@@ -1071,13 +1159,74 @@
             const popupImage = document.getElementById('popupImage');
             const timerEl = document.getElementById('popupTimer');
             
+            currentSlide = 0;
+            
             // Set content based on type
             popupUsername.textContent = type;
             
             if (type === 'friends') {
-                if (userImages.friends) {
-                    popupAvatar.innerHTML = `<img src="${userImages.friends}" alt="friends">`;
-                    popupImage.innerHTML = `<img src="${userImages.friends}" alt="friends">`;
+                // Check if we have any images
+                const hasImages = userImages.friends && userImages.friends.some(img => img !== null);
+                
+                if (hasImages) {
+                    // Set avatar to first image
+                    if (userImages.friends[0]) {
+                        popupAvatar.innerHTML = `<img src="${userImages.friends[0]}" alt="friends">`;
+                    }
+                    
+                    // Create slideshow for popup
+                    popupImage.innerHTML = '';
+                    const validImages = userImages.friends.filter(img => img !== null);
+                    
+                    validImages.forEach((img, index) => {
+                        const imgEl = document.createElement('img');
+                        imgEl.src = img;
+                        imgEl.alt = `friends ${index + 1}`;
+                        if (index === 0) imgEl.classList.add('active');
+                        popupImage.appendChild(imgEl);
+                    });
+                    
+                    // Add navigation buttons if more than 1 image
+                    if (validImages.length > 1) {
+                        const prevBtn = document.createElement('button');
+                        prevBtn.className = 'popup-nav prev show';
+                        prevBtn.innerHTML = '‹';
+                        prevBtn.onclick = (e) => {
+                            e.stopPropagation();
+                            changeSlide(-1);
+                        };
+                        
+                        const nextBtn = document.createElement('button');
+                        nextBtn.className = 'popup-nav next show';
+                        nextBtn.innerHTML = '›';
+                        nextBtn.onclick = (e) => {
+                            e.stopPropagation();
+                            changeSlide(1);
+                        };
+                        
+                        popupImage.appendChild(prevBtn);
+                        popupImage.appendChild(nextBtn);
+                        
+                        // Add indicators
+                        const indicators = document.createElement('div');
+                        indicators.className = 'popup-indicators';
+                        validImages.forEach((_, index) => {
+                            const indicator = document.createElement('div');
+                            indicator.className = 'popup-indicator' + (index === 0 ? ' active' : '');
+                            indicator.onclick = (e) => {
+                                e.stopPropagation();
+                                goToSlide(index);
+                            };
+                            indicators.appendChild(indicator);
+                        });
+                        popupImage.appendChild(indicators);
+                        
+                        // Auto-advance slides every 5 seconds
+                        if (slideInterval) clearInterval(slideInterval);
+                        slideInterval = setInterval(() => {
+                            changeSlide(1);
+                        }, 5000);
+                    }
                 } else {
                     popupAvatar.innerHTML = '👥';
                     popupImage.innerHTML = '👥';
@@ -1086,7 +1235,7 @@
             } else if (type === 'extra') {
                 if (userImages.extra) {
                     popupAvatar.innerHTML = `<img src="${userImages.extra}" alt="extra">`;
-                    popupImage.innerHTML = `<img src="${userImages.extra}" alt="extra">`;
+                    popupImage.innerHTML = `<img src="${userImages.extra}" alt="extra" class="active">`;
                 } else {
                     popupAvatar.innerHTML = '✨';
                     popupImage.innerHTML = '✨';
@@ -1120,6 +1269,34 @@
             }, 30000);
         }
 
+        function changeSlide(direction) {
+            const images = document.querySelectorAll('.popup-image img');
+            const indicators = document.querySelectorAll('.popup-indicator');
+            
+            if (images.length <= 1) return;
+            
+            images[currentSlide].classList.remove('active');
+            indicators[currentSlide].classList.remove('active');
+            
+            currentSlide = (currentSlide + direction + images.length) % images.length;
+            
+            images[currentSlide].classList.add('active');
+            indicators[currentSlide].classList.add('active');
+        }
+
+        function goToSlide(index) {
+            const images = document.querySelectorAll('.popup-image img');
+            const indicators = document.querySelectorAll('.popup-indicator');
+            
+            images[currentSlide].classList.remove('active');
+            indicators[currentSlide].classList.remove('active');
+            
+            currentSlide = index;
+            
+            images[currentSlide].classList.add('active');
+            indicators[currentSlide].classList.add('active');
+        }
+
         function closeHighlightPopup() {
             const popup = document.getElementById('highlightPopup');
             popup.classList.remove('show');
@@ -1131,6 +1308,10 @@
             if (countdown) {
                 clearInterval(countdown);
                 countdown = null;
+            }
+            if (slideInterval) {
+                clearInterval(slideInterval);
+                slideInterval = null;
             }
         }
 
@@ -1174,7 +1355,7 @@
 // Copy this entire file and save as images-config-profile.js
 const IMAGES_CONFIG_PROFILE = ${JSON.stringify(userImages, null, 2)};
 
-// Auto-load images when page loads
+//Auto-load images when page loads
 if (typeof loadImagesFromConfig === 'function') {
     loadImagesFromConfig(IMAGES_CONFIG_PROFILE);
 }`;
@@ -1251,6 +1432,5 @@ if (typeof loadImagesFromConfig === 'function') {
             });
         });
     </script>
-    <script src="images-config-profile.js"></script>
 </body>
 </html>
