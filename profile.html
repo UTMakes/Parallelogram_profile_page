@@ -1351,14 +1351,14 @@
         }
 
         function generateConfig() {
-            const config = `// Shapegram Profile Images Configuration
+            const config = // Shapegram Profile Images Configuration
 // Copy this entire file and save as images-config-profile.js
 const IMAGES_CONFIG_PROFILE = ${JSON.stringify(userImages, null, 2)};
 
 // Auto-load images when page loads
 if (typeof loadImagesFromConfig === 'function') {
     loadImagesFromConfig(IMAGES_CONFIG_PROFILE);
-}`;
+};
 
             const output = document.getElementById('configOutput');
             const instructions = document.getElementById('instructions');
